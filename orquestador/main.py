@@ -39,6 +39,10 @@ class AssignAchievementRequest(BaseModel):
     achievementId: int
     user_id: int
 
+@router.get('/')
+async def index():
+    return {'message': 'Hello World'}
+
 
 @app.post("/register")
 async def create_user(user_data: UserCreateRequest):
