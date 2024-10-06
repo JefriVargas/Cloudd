@@ -39,7 +39,7 @@ class AssignAchievementRequest(BaseModel):
     achievementId: int
     user_id: int
 
-@router.get('/')
+@app.get('/')
 async def index():
     return {'message': 'Hello World'}
 
