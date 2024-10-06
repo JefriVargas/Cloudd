@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # Node.js
+  app:
+    build: ./api3
+    ports:
+      - "8003:8003"
+    environment:
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=ASIAVYOMUIQSTXD3WMFL
+      - AWS_SECRET_ACCESS_KEY=e13zmDoNiRq+bsqkRGVVWAfEU05eFxnNSeR+RJ9o
+      - AWS_SESSION_TOKEN=IQoJb3JpZ2luX2VjELD//////////wEaCXVzLXdlc3QtMiJGMEQCIF7JuLdfADjdD9BvlFUiQGf0pacmBW/BaOPMxe0/krCPAiAZRffFBFgp4KKr87in4geH50s1Sjg921wZ/rKfGKJ85CqlAgj5//////////8BEAEaDDM5NjEwMzAwOTMxNyIMgH55y8OXtKIPax82KvkBwe5dlpeYh1UZXgOFOS02dkOV4v+JPOvb3T5YHrMWyShiG3NXgSVDi8wjiZfq1v+rZnFKBYw1wjrIDdrjpv9Jb5LMudBVTGUavV3ScJT5zgC1hSQbBHqjGhbhV5JCdoQ1DrE1MGplRdTKejTsEXVQSE12LXMSyuL5O+CwM2XEpVo0gUYjThBB6KHa/4zncc+DsN0sGqabwcCR30hNn0TR0Qad7+S1hQC8PDyWgog2WoRI0Ei7M7JNhLxwrNcfH26ISJTFHXsKe+EfCGDgHzMIizWEIjKNheWcLzR+zaNxUD/WfeKCYEvyNnBwPepq22YnFcHnY/BwD6ydMPidh7gGOp4BYJZ/bUyr0bRtBrHAu8pqw47snM18aNrYfPjZvf9uItQZ+z+q4/QYJCjDOcXGwjy7GIXrVI1tC6AVFpYwLSvMdhPWZPEv2NlTigCxVX81gh6nXa2NJ9s6O0/a7Wyka9p8Lfukisj864HD8VK7T1L3MZn6hFH0FB3iIBg1R99BMokqmquutuoUElsf8NFvEjbm8Yf1/huMes0qMrLfgkk=
+    networks:
+      - my-network
+
+  orquestador:
+    build: ./orquestador
+    ports:
+      - "8001:8001"
+    networks:
+      - my-network
+
+  # FastAPI
+  api1:
+    build: ./api1
+    ports:
+      - "8000:8000"
+    environment:
+      - DATA_USER=postgres.gwtvzmsuunpikefnnzwn
+      - DATA_PASSWORD=L2NFS60u4W7paoPE
+      - HOST=aws-0-us-east-1.pooler.supabase.com
+      - DB_PORT=5432
+      - DATABASE_NAME=bd_1
+    networks:
+      - my-network
+
+  # Spring Boot
+  api2:
+    build: ./api2
+    ports:
+      - "8002:8002"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-0-us-east-1.pooler.supabase.com:5432/bd_2
+      - SPRING_DATASOURCE_USERNAME=postgres.gwtvzmsuunpikefnnzwn
+      - SPRING_DATASOURCE_PASSWORD=L2NFS60u4W7paoPE
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge
+
