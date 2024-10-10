@@ -121,28 +121,31 @@ async def get_user(user_id: int):
             response_games = await client.get(f"{API2_URL}/games")
             games_data = response_games.json()
 
-            if response_games.status_code != 200:
-                raise HTTPException(status_code=response_games.status_code, detail=games_data)
+            if response_games.status_code == 200:
 
-            user_achievements_by_game = {}
-            for achievement in user_data['data']['achievements']:
-                game_name = achievement['game_name']
-                if game_name not in user_achievements_by_game:
-                    user_achievements_by_game[game_name] = []
-                user_achievements_by_game[game_name].append({
-                    "achievement_name": achievement['achievement_name'],
-                    "achievement_id": achievement['achievement_id'],
-                    "rarity": achievement['rarity']
-                })
+                user_achievements_by_game = {}
+                if user_data['data']['achievements']:
+                    for achievement in user_data['data']['achievements']:
+                        game_name = achievement['game_name']
+                        if game_name not in user_achievements_by_game:
+                            user_achievements_by_game[game_name] = []
+                        user_achievements_by_game[game_name].append({
+                            "achievement_name": achievement['achievement_name'],
+                            "achievement_id": achievement['achievement_id'],
+                            "rarity": achievement['rarity']
+                        })
 
-            user_games = []
-            for game in games_data['games']:
-                if game['name'] in user_achievements_by_game:
-                    user_games.append({
-                        "game_name": game['name'],
-                        "game_id": game['id'],
-                        "achievements": user_achievements_by_game[game['name']]
-                    })
+                user_games = []
+                if games_data:
+                    for game in games_data['games']:
+                        if game['name'] in user_achievements_by_game:
+                            user_games.append({
+                                "game_name": game['name'],
+                                "game_id": game['id'],
+                                "achievements": user_achievements_by_game[game['name']]
+                            })
+            else:
+                user_games = []
 
             return {
                 "success": True,
@@ -162,6 +165,7 @@ async def get_user(user_id: int):
             }
 
         except Exception as e:
+            print(str(e))
             raise HTTPException(status_code=500, detail=f"Error fetching user: {str(e)}")
 
 
